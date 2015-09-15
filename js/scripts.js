@@ -1,4 +1,31 @@
+function Contact(firstName,lastName){
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.addresses = [];
+}
 
+function Address(street, city, state){
+    this.street = street;
+    this.city = city;
+    this.state = state;
+}
+
+
+Contact.prototype.fullName = function() {
+    return this.firstName + " " + this.lastName;
+}
+
+Address.prototype.fullAddress = function() {
+    return this.street + ", " + this.city + ", " + this.state;
+}
+
+function resetFields() {
+    $("input#new-first-name").val("");
+    $("input#new-last-name").val("");
+    $("input.new-street").val("");
+    $("input.new-city").val("");
+    $("input.new-state").val("");
+}
 
 
 $(document).ready(function() {
@@ -25,18 +52,18 @@ $(document).ready(function() {
         var inputtedFirstName = $("input#new-first-name").val();
         var inputtedLastName = $("input#new-last-name").val();
 
-        var newContact = { firstName: inputtedFirstName, lastName: inputtedLastName, addresses: [] };
+        var newContact = new Contact(inputtedFirstName, inputtedLastName);
 
         $(".new-address").each(function() {
             var inputtedStreet = $(this).find("input.new-street").val();
             var inputtedCity = $(this).find("input.new-city").val();
             var inputtedState = $(this).find("input.new-state").val();
 
-            var newAddress = { street: inputtedStreet, city: inputtedCity, state: inputtedState };
+            var newAddress = new Address(inputtedStreet, inputtedCity, inputtedState);
             newContact.addresses.push(newAddress);
         });
 
-        $("ul#contacts").append("<li><span class='contact'>" + newContact.firstName + " " + newContact.lastName + "</span></li>");
+        $("ul#contacts").append("<li><span class='contact'>" + newContact.fullName() + "</span></li>");
 
         $(".contact").last().click(function() {
             $("#show-contact").show();
@@ -47,15 +74,10 @@ $(document).ready(function() {
 
             $("ul#addresses").text("");
             newContact.addresses.forEach(function(address) {
-                $("ul#addresses").append("<li>" + address.street + ", " + address.state + "</li>");
+                $("ul#addresses").append("<li>" address.fullAddress() "</li>");
             });
         });
 
-        $("input#new-first-name").val("");
-        $("input#new-last-name").val("");
-        $("input.new-street").val("");
-        $("input.new-city").val("");
-        $("input.new-state").val("");
-
+        resetFields();
     });
 });
